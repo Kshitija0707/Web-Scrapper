@@ -1,33 +1,32 @@
-import pandas as pd
-import plotly.express as px
+import requests
+from bs4 import BeautifulSoup
 
-def generate_interactive_visualizations(data_file):
-    try:
-        df = pd.read_csv(data_file)
-    except FileNotFoundError:
-        print(f"Error: File '{data_file}' not found.")
-        return
-    except pd.errors.EmptyDataError:
-        print(f"Error: File '{data_file}' is empty.")
-        return
+def scrape_website(url):
+    # Send a GET request to the URL
+    response = requests.get(url)
 
-    # Check if required columns exist
-    required_columns = ['price', 'sqft_living', 'waterfront', 'zipcode']
-    for column in required_columns:
-        if column not in df.columns:
-            print(f"Error: Column '{column}' not found in the dataset.")
-            return
+    # Check if the request was successful
+    if response.status_code == 200:
+        # Parse the HTML content of the page
+        soup = BeautifulSoup(response.content, 'html.parser')
 
-    # Generate interactive visualizations using Plotly
-    fig = px.scatter(df, x='price', y='sqft_living', color='waterfront', hover_data=['zipcode'])
-    fig.show()
+        # Find specific data on the page
+        links = soup.find_all('a')
+
+        # Extract and print the href attribute of each link
+        for link in links:
+            href = link.get('href')
+            if href:
+                print(href)
+    else:
+        print("Failed to fetch the web page.")
 
 def main():
-    # Specify path to the dataset
-    data_file = "C:/Users/ACT/Downloads/RealEstateData.csv" 
+    # Specify the URL of the website to scrape
+    url = "https://github.com/Kshitija0707/Kshitija0707"
 
-    generate_interactive_visualizations(data_file)
+    # Call the function to scrape the website
+    scrape_website(url)
 
 if __name__ == "__main__":
     main()
-
