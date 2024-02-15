@@ -1,4 +1,5 @@
-#Build a Wb Scrapper
+#Build a Web Scrapper
+
 a web scraper that extracts
 specific data from websites using libraries
 like BeautifulSoup or Scrapy. This task will
